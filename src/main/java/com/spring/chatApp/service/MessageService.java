@@ -38,7 +38,7 @@ public class MessageService {
         String recipientId1 = userRepository.findByUsername(peer).getId().toString();
 
         List<MessageDto> query = jdbcTemplate.query(
-                "select * from message where (sender_id = uuid_to_bin(?) and recipient_id = uuid_to_bin(?)) or (sender_id = uuid_to_bin(?) and recipient_id = uuid_to_bin(?)) order by message.sent_date",
+                "select * from chat.message where (sender_id = uuid_to_bin(?) and recipient_id = uuid_to_bin(?)) or (sender_id = uuid_to_bin(?) and recipient_id = uuid_to_bin(?)) order by message.sent_date",
                 new MessageRowMapper(),
                 senderId1, recipientId1, recipientId1, senderId1);
         return query;

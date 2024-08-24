@@ -104,7 +104,7 @@ public class MessageServiceTest {
         String userId1 = mockUser1.getId().toString();
         String userId2 = mockUser2.getId().toString();
         when(jdbcTemplate.query(
-                "select * from message where (sender_id = uuid_to_bin(?) and recipient_id = uuid_to_bin(?)) or (sender_id = uuid_to_bin(?) and recipient_id = uuid_to_bin(?)) order by message.sent_date",
+                "select * from chat.message where (sender_id = uuid_to_bin(?) and recipient_id = uuid_to_bin(?)) or (sender_id = uuid_to_bin(?) and recipient_id = uuid_to_bin(?)) order by message.sent_date",
                 new MessageRowMapper(),
                 userId1, userId2, userId2, userId1)).thenReturn(messageDtos);
 
