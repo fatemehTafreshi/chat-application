@@ -1,6 +1,5 @@
 package com.spring.chatApp.service;
 
-import com.spring.chatApp.data.model.User;
 import com.spring.chatApp.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
