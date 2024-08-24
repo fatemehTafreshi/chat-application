@@ -4,7 +4,6 @@ import com.spring.chatApp.dto.MessageDto;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import java.nio.ByteBuffer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -14,8 +13,6 @@ import static com.spring.chatApp.configuration.CommonMethods.uuidFixEndian;
 
 @Component
 public class MessageRowMapper implements RowMapper<MessageDto> {
-
-
 
 
     @Override
