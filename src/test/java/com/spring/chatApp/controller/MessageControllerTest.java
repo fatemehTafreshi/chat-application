@@ -1,4 +1,4 @@
-package com.spring.chatApp;
+package com.spring.chatApp.controller;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;

@@ -45,12 +45,12 @@ public class AdminController {
 
     @GetMapping("/admin/get-loggedIn-user")
     public List<UserDto> getLoggedInUser(Authentication authentication) {
-
-        return adminService.getLoggedInUser(authentication);
+        String username = authentication.getName();
+        return adminService.getLoggedInUser(username);
     }
 
     @PostMapping("/admin/authorities/user")
-    public ResponseEntity<String> setAuthoritiesForOneUser(@RequestParam UUID id, @RequestBody @Valid Authorities authorities) {
+    public ResponseEntity<String> setAuthoritiesForOneUser(@RequestParam UUID id, @RequestBody @Valid List<String> authorities) {
         return adminService.setAuthoritiesForOneUser(id, authorities);
     }
 }

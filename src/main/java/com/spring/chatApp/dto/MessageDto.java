@@ -2,6 +2,7 @@ package com.spring.chatApp.dto;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,10 +11,10 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Component
+@AllArgsConstructor
+@Builder
+@Data
 public class MessageDto {
 
     private UUID id;

@@ -3,11 +3,9 @@ package com.spring.chatApp.service;
 import com.spring.chatApp.data.model.Authorities;
 import com.spring.chatApp.data.model.User;
 import com.spring.chatApp.data.repository.UserRepository;
-import com.spring.chatApp.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,22 +16,19 @@ import java.util.Collections;
 public class UserService {
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private JwtService jwtService;
+
 
     @Transactional
-    public ResponseEntity<String> changePassword(String password, Authentication authentication) {
+    public ResponseEntity<String> changePassword(String password, String username) {
 
-        User user = userRepository.findByUsername(authentication.getName());
+        User user = userRepository.findByUsername(username);
         if (!passwordEncoder.matches(password, user.getPassword())) {
             user.setPassword(passwordEncoder.encode(password));
             userRepository.save(user);
             return ResponseEntity.ok("Password changed Successfully!");
-//        return new LoginResponse(jwtService.generateJWT(user.getUsername(), user.getAuthorities()));
-
         } else {
             return new ResponseEntity<>(
                     "Your entered password is same as before!",

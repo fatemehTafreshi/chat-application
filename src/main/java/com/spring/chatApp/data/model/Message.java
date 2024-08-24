@@ -1,7 +1,9 @@
 package com.spring.chatApp.data.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.spring.chatApp.configuration.JacksonLocalDateTimeDeserializer;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "message", schema = "chat")
+@Table(name = "message",schema = "chat")
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -30,12 +32,11 @@ public class Message {
     private LocalDateTime sentDate;
 
     @Column(name = "seenDate")
+    @JsonDeserialize(using = JacksonLocalDateTimeDeserializer.class)
     private LocalDateTime seenDate;
 
-//    @Column(columnDefinition = "VARCHAR(255)")
     private UUID senderId;
 
-//    @Column(columnDefinition = "VARCHAR(255)")
     private UUID recipientId;
 
 

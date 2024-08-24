@@ -20,8 +20,8 @@ public class UserController {
 
     @PostMapping("/user/change-password")
     public ResponseEntity<String> changePassword(@RequestBody String password, Authentication authentication) {
-
-        return userService.changePassword(password, authentication);
+        String username = authentication.getName();
+        return userService.changePassword(password, username);
     }
 
     @PostMapping("/user/register")

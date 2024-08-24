@@ -23,11 +23,6 @@ public class AuthenticationController {
     }
 
 
-//    private String createScope(List<Authorities> authentication) {
-//        return authentication.stream().map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.joining(" "));
-//    }
-
 }
 
 

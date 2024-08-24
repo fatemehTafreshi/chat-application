@@ -1,12 +1,10 @@
-package com.spring.chatApp;
+package com.spring.chatApp.controller;
 
 
-import com.spring.chatApp.controller.MessageController;
 import com.spring.chatApp.data.model.Message;
 import com.spring.chatApp.service.MessageService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,16 +29,9 @@ public class MessageControllerUnitTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private MessageService messageService;
 
-//    @MockBean
-//    private MessageController messageController;
-
-//    @BeforeEach
-//    public void setup() {
-//        MockitoAnnotations.openMocks(this);
-//    }
 
     @Test
     public void testReceivedMessages() throws Exception {
@@ -53,20 +44,21 @@ public class MessageControllerUnitTest {
                         UUID.fromString("da6cc511-51b7-43e4-8cf0-e35bfc3b2d22"), UUID.fromString("3ae01670-78ee-46f0-bba0-8a86081220bc"))
         );
 
-        // Perform the GET request
+
         when(messageService.receivedMessages("user2")).thenReturn(mockMessages);
 
         mockMvc.perform(get("/user/received-messages")
                         .with(jwt().jwt(jwt -> jwt.claim("scope", "read").subject("user2")))
                         .accept("application/json")
                         .contentType(MediaType.APPLICATION_JSON)
-                ) // Set the principal if needed
+                )
 
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].text").value("aaaaaaa"))
-//                .andExpect(jsonPath("$[1].content").value("You have a new notification."));
-        ;
+                .andExpect(jsonPath("$[0].text").value("aaaaaaa"));
     }
+
+
+
 }

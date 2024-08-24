@@ -1,6 +1,5 @@
 package com.spring.chatApp.service;
 
-import com.spring.chatApp.data.RowMapper.UserRowMapper;
 import com.spring.chatApp.data.model.Authorities;
 import com.spring.chatApp.data.model.User;
 import com.spring.chatApp.data.repository.AdminRepository;
@@ -9,8 +8,6 @@ import com.spring.chatApp.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +21,7 @@ import java.util.UUID;
 public class AdminService {
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -34,7 +30,15 @@ public class AdminService {
 
     public List<UserDto> getAllUsers() {
 
-        return jdbcTemplate.query("SELECT u.username,u.id,u.enabled,GROUP_CONCAT(a.authority SEPARATOR ' , ') AS authorities FROM chat.user u,chat.authorities a WHERE u.id = a.user_id group by user_id", new UserRowMapper());
+        List<User> userList = userRepository.findAll();
+        List<UserDto> userDtoList = new ArrayList<>();
+        for (User user : userList) {
+            UserDto userDto = new UserDto(user.getId(), user.getUsername(), user.isEnabled(), null);
+            userDto.setAuthorities(user.getAuthorities().stream().map(Authorities::getAuthority).toList());
+            userDtoList.add(userDto);
+        }
+
+        return userDtoList;
 
     }
 
@@ -54,8 +58,8 @@ public class AdminService {
         return new ResponseEntity<>("The user have been created before!", HttpStatus.BAD_REQUEST);
     }
 
-    public List<UserDto> getLoggedInUser(Authentication authentication) {
-        User user = userRepository.findByUsername(authentication.getName());
+    public List<UserDto> getLoggedInUser(String username) {
+        User user = userRepository.findByUsername(username);
         UserDto userDto = new UserDto(user.getId(), user.getUsername(), user.isEnabled(), null);
         userDto.setAuthorities(user.getAuthorities().stream().map(Authorities::getAuthority).toList());
         return Collections.singletonList(userDto);
@@ -73,19 +77,6 @@ public class AdminService {
         return adminRepository.findAuthoritiesByUserId(id);
     }
 
-    @Transactional
-    public ResponseEntity<String> setAuthoritiesForOneUser(UUID id, Authorities authorities) {
-
-        authorities.setUserId(id);
-        adminRepository.save(authorities);
-        return ResponseEntity.ok("Authority added successfully!");
-
-//        authorities.setUserId(id);
-//        List<Authorities> list = user.getAuthorities();
-//        list.add(authorities);
-//        user.setAuthorities(list);
-//        adminRepository.save(authorities);
-    }
 
     @Transactional
     public ResponseEntity<String> setAuthoritiesForOneUser(UUID id, List<String> types) {

@@ -25,7 +25,8 @@ public class MessageController {
 
     @GetMapping("/user/{peer}/chat-messages")
     public List<MessageDto> twoWayChatMessages(@PathVariable String peer, Authentication authentication) {
-        return messageService.twoWayChat(peer, authentication);
+        String username = authentication.getName();
+        return messageService.twoWayChat(peer, username);
     }
 
 
@@ -36,8 +37,8 @@ public class MessageController {
 
     @GetMapping("/user/sent-messages")
     public List<Message> sentMessages(Authentication authentication) {
-
-        return messageService.sentMessages(authentication);
+        String username = authentication.getName();
+        return messageService.sentMessages(username);
     }
 
     @GetMapping("/user/get-message")
@@ -64,8 +65,8 @@ public class MessageController {
             @RequestBody @Valid Message msg,
             @PathVariable String peer,
             Authentication authentication) {
-
-        return messageService.sendMessage(msg, peer, authentication);
+        String username = authentication.getName();
+        return messageService.sendMessage(msg, peer, username);
     }
 
     @DeleteMapping("/user/delete-message")

@@ -6,11 +6,12 @@ import com.spring.chatApp.data.model.User;
 import com.spring.chatApp.data.repository.MessageRepository;
 import com.spring.chatApp.data.repository.UserRepository;
 import com.spring.chatApp.dto.MessageDto;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -19,21 +20,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Service
 public class MessageService {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
-    @Autowired
-    MessageDto messageDto;
+    private JdbcTemplate jdbcTemplate;
     @Autowired
     private MessageRepository messageRepository;
     @Autowired
     private UserRepository userRepository;
 
-    public List<MessageDto> twoWayChat(String peer, Authentication authentication) {
+    public List<MessageDto> twoWayChat(String peer, String username) {
 
-        String senderId1 = userRepository.findMessageByUsername(authentication.getName()).getId().toString();
+        String senderId1 = userRepository.findMessageByUsername(username).getId().toString();
         String recipientId1 = userRepository.findByUsername(peer).getId().toString();
 
         List<MessageDto> query = jdbcTemplate.query(
@@ -48,9 +49,9 @@ public class MessageService {
         return userRepository.findMessageByUsername(username).getReceivedMessages();
     }
 
-    public List<Message> sentMessages(Authentication authentication) {
+    public List<Message> sentMessages(String username) {
 
-        return userRepository.findMessageByUsername(authentication.getName()).getSentMessages();
+        return userRepository.findMessageByUsername(username).getSentMessages();
     }
 
     public ResponseEntity<String> updateMessage(Message msg,
@@ -72,9 +73,9 @@ public class MessageService {
     }
 
 
-    public ResponseEntity<String> sendMessage(Message msg, String peer, Authentication authentication) {
+    public ResponseEntity<String> sendMessage(Message msg, String peer, String username) {
 
-        User user = userRepository.findByUsername(authentication.getName());
+        User user = userRepository.findByUsername(username);
         msg.setSenderId(user.getId());
         msg.setRecipientId(userRepository.findMessageByUsername(peer).getId());
         msg.setSentDate(LocalDateTime.now());

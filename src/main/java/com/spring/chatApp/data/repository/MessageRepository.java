@@ -13,5 +13,4 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
 
     Message findByMessageId(UUID messageId);
 
-
 }
