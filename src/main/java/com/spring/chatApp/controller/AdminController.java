@@ -49,7 +49,7 @@ public class AdminController {
         return adminService.getLoggedInUser(username);
     }
 
-    @PostMapping("/admin/authorities/user")
+    @PutMapping("/admin/authorities/user")
     public ResponseEntity<String> setAuthoritiesForOneUser(@RequestParam UUID id, @RequestBody @Valid List<String> authorities) {
         return adminService.setAuthoritiesForOneUser(id, authorities);
     }

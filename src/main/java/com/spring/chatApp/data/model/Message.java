@@ -1,9 +1,8 @@
 package com.spring.chatApp.data.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.spring.chatApp.configuration.JacksonLocalDateTimeDeserializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,21 +17,22 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "message",schema = "chat")
+@Table(name = "message", schema = "chat")
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID messageId;
 
-    @Column(name = "text", nullable = false)
+    @Column(name = "text")
+    @NotNull(message = "message must not be null!")
     private String text;
 
     @Column(name = "sentDate")
-    @JsonDeserialize(using = JacksonLocalDateTimeDeserializer.class)
+    @Past(message = "sent date must be in the past!")
     private LocalDateTime sentDate;
 
     @Column(name = "seenDate")
-    @JsonDeserialize(using = JacksonLocalDateTimeDeserializer.class)
+    @Past(message = "seen date must be in the past!")
     private LocalDateTime seenDate;
 
     private UUID senderId;

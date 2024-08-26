@@ -1,17 +1,14 @@
 package com.spring.chatApp.service;
 
-import com.spring.chatApp.data.RowMapper.MessageRowMapper;
 import com.spring.chatApp.data.model.Message;
 import com.spring.chatApp.data.model.User;
 import com.spring.chatApp.data.repository.MessageRepository;
 import com.spring.chatApp.data.repository.UserRepository;
-import com.spring.chatApp.dto.MessageDto;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -26,22 +23,16 @@ import java.util.UUID;
 public class MessageService {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
     private MessageRepository messageRepository;
     @Autowired
     private UserRepository userRepository;
 
-    public List<MessageDto> twoWayChat(String peer, String username) {
+    public List<Message> twoWayChat(String peer, String username) {
 
-        String senderId1 = userRepository.findMessageByUsername(username).getId().toString();
-        String recipientId1 = userRepository.findByUsername(peer).getId().toString();
+        UUID senderId1 = userRepository.findMessageByUsername(username).getId();
+        UUID recipientId1 = userRepository.findByUsername(peer).getId();
 
-        List<MessageDto> query = jdbcTemplate.query(
-                "select * from chat.message where (sender_id = uuid_to_bin(?) and recipient_id = uuid_to_bin(?)) or (sender_id = uuid_to_bin(?) and recipient_id = uuid_to_bin(?)) order by message.sent_date",
-                new MessageRowMapper(),
-                senderId1, recipientId1, recipientId1, senderId1);
-        return query;
+        return messageRepository.findBySenderIdAndRecipientId(senderId1, recipientId1, recipientId1, senderId1);
 
     }
 
@@ -62,6 +53,7 @@ public class MessageService {
         }
         Message msg1 = messageRepository.findByMessageId(id);
         if (msg1.getText().matches(msg.getText())) {
+
             return new ResponseEntity<>(
                     "Your entered text is same as before!",
                     HttpStatus.BAD_REQUEST);

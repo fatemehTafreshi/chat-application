@@ -1,7 +1,6 @@
 package com.spring.chatApp.controller;
 
 import com.spring.chatApp.data.model.Message;
-import com.spring.chatApp.dto.MessageDto;
 import com.spring.chatApp.service.MessageService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,7 @@ public class MessageController {
 
 
     @GetMapping("/user/{peer}/chat-messages")
-    public List<MessageDto> twoWayChatMessages(@PathVariable String peer, Authentication authentication) {
+    public List<Message> twoWayChatMessages(@PathVariable String peer, Authentication authentication) {
         String username = authentication.getName();
         return messageService.twoWayChat(peer, username);
     }
@@ -53,7 +52,7 @@ public class MessageController {
         return messageService.showUpdatePage(id);
     }
 
-    @PostMapping("/user/update-message")
+    @PutMapping("/user/update-message")
     public ResponseEntity<String> updateMessage(@RequestBody @Valid Message msg,
                                                 @RequestParam UUID id, BindingResult result) {
 
@@ -74,5 +73,6 @@ public class MessageController {
 
         return messageService.deleteMessage(id);
     }
+
 
 }
