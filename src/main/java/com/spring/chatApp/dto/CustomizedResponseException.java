@@ -36,7 +36,9 @@ public class CustomizedResponseException extends ResponseEntityExceptionHandler 
                                                                      HttpStatusCode status,
                                                                      WebRequest request) {
         ErrorDetails errorDetails =
-                new ErrorDetails(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), ex.getMostSpecificCause().toString());
+                new ErrorDetails(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(),
+                        ex.getMostSpecificCause().toString());
+
         return handleExceptionInternal(
                 ex, errorDetails, headers, errorDetails.getStatus(), request);
     }
